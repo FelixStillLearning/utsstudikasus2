@@ -1,9 +1,9 @@
-from flask_sqlalchemy import SQLAlchemy
 from app.crypto.aes import AESCipher
-
-db = SQLAlchemy()
+from app.extensions import db  # Import the shared db instance
 
 class User(db.Model):
+    __tablename__ = 'users'  # Explicitly set table name to avoid potential keyword conflicts
+    
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)
     password = db.Column(db.String(256), nullable=False)  # Store hashed password

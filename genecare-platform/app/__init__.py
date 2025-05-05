@@ -1,5 +1,6 @@
 from flask import Flask, render_template
 from app.extensions import db  # Import db at the module level
+import os
 
 def create_app():
     app = Flask(__name__)
@@ -9,6 +10,10 @@ def create_app():
     
     # Initialize extensions
     db.init_app(app)
+    
+    # Create database tables if they don't exist
+    with app.app_context():
+        db.create_all()
 
     # Initialize blueprints
     from app.auth.routes import auth_bp

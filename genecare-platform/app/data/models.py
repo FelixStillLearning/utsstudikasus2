@@ -1,7 +1,5 @@
 from sqlalchemy import Column, Integer, String, Text
-from flask_sqlalchemy import SQLAlchemy
-
-db = SQLAlchemy()
+from app.extensions import db  # Import the shared db instance
 
 class HealthData(db.Model):
     __tablename__ = 'health_data'
