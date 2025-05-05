@@ -1,0 +1,10 @@
+# This is a dummy DNA data file for testing GeneCare platform uploads.
+# Data generated: 2025-05-05
+# Format: RSID,Chromosome,Position,Genotype
+rsid,chromosome,position,genotype
+rs12345,1,752721,AG
+rs67890,1,879308,CT
+rs11223,2,10583,GG
+rs44556,2,234567,AA
+rs77889,5,112233,TC
+rs99001,X,155270560,GT

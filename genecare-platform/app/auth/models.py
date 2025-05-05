@@ -1,7 +1,8 @@
 from app.crypto.aes import AESCipher
 from app.extensions import db  # Import the shared db instance
+from flask_login import UserMixin
 
-class User(db.Model):
+class User(db.Model, UserMixin):
     __tablename__ = 'user'  # Changed from 'users' to 'user' to match SQLAlchemy's default convention
     
     id = db.Column(db.Integer, primary_key=True)

@@ -1,5 +1,5 @@
 from flask import Flask, render_template
-from app.extensions import db  # Import db at the module level
+from app.extensions import db, login_manager  # Import login_manager
 import os
 
 def create_app():
@@ -10,6 +10,13 @@ def create_app():
     
     # Initialize extensions
     db.init_app(app)
+    login_manager.init_app(app)  # Initialize login_manager
+    
+    # User loader function for Flask-Login
+    @login_manager.user_loader
+    def load_user(user_id):
+        from app.auth.models import User
+        return User.query.get(int(user_id))
     
     # Create database tables if they don't exist
     with app.app_context():
@@ -20,6 +27,7 @@ def create_app():
     app.register_blueprint(auth_bp, url_prefix='/auth')
 
     from app.api.routes import api_bp
+    # Register API blueprint with the /api prefix
     app.register_blueprint(api_bp, url_prefix='/api')
 
     # Add a route for the root URL
