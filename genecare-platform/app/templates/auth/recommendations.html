@@ -1,0 +1,184 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <div class="row mb-4">
+        <div class="col-12">
+            <div class="alert alert-success">
+                <i class="fas fa-lock"></i> Your data is protected with AES-256 encryption and is only decrypted temporarily for display.
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-lg-3">
+            <div class="card mb-4">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">DNA Data Categories</h5>
+                </div>
+                <div class="list-group list-group-flush">
+                    <a href="#genetic-health" class="list-group-item list-group-item-action active">Genetic Health Risks</a>
+                    <a href="#nutrition" class="list-group-item list-group-item-action">Nutrition Recommendations</a>
+                    <a href="#fitness" class="list-group-item list-group-item-action">Fitness Insights</a>
+                    <a href="#medications" class="list-group-item list-group-item-action">Medication Responses</a>
+                    <a href="#ancestry" class="list-group-item list-group-item-action">Ancestry Information</a>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">My DNA Reports</h5>
+                </div>
+                <div class="list-group list-group-flush" id="myDnaReports">
+                    <div class="list-group-item text-center">
+                        <div class="spinner-border text-primary" role="status">
+                            <span class="visually-hidden">Loading...</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-9">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    <h4 class="mb-0" id="recommendationTitle">Genetic Health Recommendations</h4>
+                </div>
+                <div class="card-body" id="recommendationsContainer">
+                    <div id="genetic-health" class="recommendation-section">
+                        <h5>Personalized Health Insights</h5>
+                        <p class="text-muted">Based on your encrypted DNA analysis</p>
+                        
+                        <div class="row" id="healthInsights">
+                            <div class="col-md-12 text-center">
+                                <div class="spinner-border text-primary" role="status">
+                                    <span class="visually-hidden">Loading recommendations...</span>
+                                </div>
+                                <p>Decrypting and analyzing your data...</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="card-footer">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <small class="text-muted">Last updated: <span id="lastUpdated">Loading...</span></small>
+                        <button class="btn btn-outline-primary btn-sm" id="refreshData">
+                            <i class="fas fa-sync-alt"></i> Refresh Analysis
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    $(document).ready(function() {
+        // Simulating fetching encrypted DNA data and recommendations
+        function fetchRecommendations() {
+            $('#healthInsights').html('<div class="col-md-12 text-center"><div class="spinner-border text-primary" role="status"></div><p>Decrypting and analyzing your data...</p></div>');
+            
+            // In a real app, this would be an API call to fetch encrypted data
+            // and decrypt it client-side or via a secure API
+            $.ajax({
+                url: '/api/recommendations',
+                type: 'GET',
+                success: function(response) {
+                    displayRecommendations(response);
+                    $('#lastUpdated').text(new Date().toLocaleString());
+                },
+                error: function(xhr) {
+                    $('#healthInsights').html('<div class="col-md-12"><div class="alert alert-danger">Unable to load recommendations. Please try again later.</div></div>');
+                }
+            });
+        }
+        
+        function loadMyReports() {
+            $.ajax({
+                url: '/api/my-dna-data',
+                type: 'GET',
+                success: function(response) {
+                    let html = '';
+                    if (response.data && response.data.length > 0) {
+                        response.data.forEach(item => {
+                            html += `<a href="#" class="list-group-item list-group-item-action" data-id="${item.id}">${item.dataType} - ${new Date(item.dateAdded).toLocaleDateString()}</a>`;
+                        });
+                    } else {
+                        html = '<div class="list-group-item">No DNA data found</div>';
+                    }
+                    $('#myDnaReports').html(html);
+                },
+                error: function() {
+                    $('#myDnaReports').html('<div class="list-group-item">Error loading reports</div>');
+                }
+            });
+        }
+        
+        function displayRecommendations(data) {
+            if (!data || !data.recommendations) {
+                $('#healthInsights').html('<div class="alert alert-info">No recommendations available. Please upload your DNA data.</div>');
+                return;
+            }
+            
+            let html = '';
+            data.recommendations.forEach(rec => {
+                let cardClass = '';
+                switch(rec.riskLevel) {
+                    case 'high': cardClass = 'border-danger'; break;
+                    case 'medium': cardClass = 'border-warning'; break;
+                    case 'low': cardClass = 'border-success'; break;
+                    default: cardClass = '';
+                }
+                
+                html += `
+                <div class="col-md-6 mb-4">
+                    <div class="card h-100 ${cardClass}">
+                        <div class="card-body">
+                            <h5 class="card-title">${rec.title}</h5>
+                            <h6 class="card-subtitle mb-2 text-muted">${rec.category}</h6>
+                            <p class="card-text">${rec.description}</p>
+                        </div>
+                        <div class="card-footer bg-transparent">
+                            <small class="text-muted">Risk level: <span class="badge ${rec.riskLevel === 'high' ? 'bg-danger' : rec.riskLevel === 'medium' ? 'bg-warning' : 'bg-success'}">${rec.riskLevel}</span></small>
+                        </div>
+                    </div>
+                </div>`;
+            });
+            
+            $('#healthInsights').html(html);
+        }
+        
+        // Initialize
+        fetchRecommendations();
+        loadMyReports();
+        
+        // Refresh button
+        $('#refreshData').click(function() {
+            fetchRecommendations();
+        });
+        
+        // Category navigation
+        $('.list-group-item-action').click(function(e) {
+            e.preventDefault();
+            $('.list-group-item-action').removeClass('active');
+            $(this).addClass('active');
+            
+            const section = $(this).attr('href').substring(1);
+            $('#recommendationTitle').text($(this).text() + ' Recommendations');
+        });
+        
+        // Report selection
+        $(document).on('click', '#myDnaReports .list-group-item-action', function(e) {
+            e.preventDefault();
+            const reportId = $(this).data('id');
+            
+            $('#myDnaReports .list-group-item-action').removeClass('active');
+            $(this).addClass('active');
+            
+            fetchRecommendations(reportId);
+        });
+    });
+</script>
+{% endblock %}

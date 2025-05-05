@@ -2,7 +2,7 @@ from app.crypto.aes import AESCipher
 from app.extensions import db  # Import the shared db instance
 
 class User(db.Model):
-    __tablename__ = 'users'  # Explicitly set table name to avoid potential keyword conflicts
+    __tablename__ = 'user'  # Changed from 'users' to 'user' to match SQLAlchemy's default convention
     
     id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(80), unique=True, nullable=False)

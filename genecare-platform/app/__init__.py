@@ -14,7 +14,7 @@ def create_app():
     # Create database tables if they don't exist
     with app.app_context():
         db.create_all()
-
+    
     # Initialize blueprints
     from app.auth.routes import auth_bp
     app.register_blueprint(auth_bp, url_prefix='/auth')

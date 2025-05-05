@@ -1,29 +1,28 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GeneCare - Home</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
-</head>
-<body>
-    <header>
-        <h1>Welcome to GeneCare</h1>
-        <nav>
-            <ul>
-                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
-                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
-            </ul>
-        </nav>
-    </header>
-    <main>
-        <section>
-            <h2>Your Health Data, Secured</h2>
-            <p>At GeneCare, we prioritize your health data protection using state-of-the-art encryption methods.</p>
-        </section>
-    </main>
-    <footer>
-        <p>&copy; 2023 GeneCare. All rights reserved.</p>
-    </footer>
-</body>
-</html>
+{% extends "base.html" %}
+
+{% block content %}
+<section class="hero">
+    <h2>Perlindungan Data Kesehatan Anda</h2>
+    <p>Di GeneCare, kami memprioritaskan keamanan data kesehatan Anda menggunakan metode enkripsi yang canggih dan terpercaya.</p>
+</section>
+
+<div class="features">
+    <div class="feature-card">
+        <i class="fas fa-shield-alt" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+        <h3>Enkripsi Data Terkuat</h3>
+        <p>Semua data kesehatan Anda dienkripsi dengan standar keamanan tertinggi menggunakan algoritma AES modern.</p>
+    </div>
+    
+    <div class="feature-card">
+        <i class="fas fa-user-lock" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+        <h3>Privasi Terjamin</h3>
+        <p>Data Anda hanya dapat diakses oleh Anda dan profesional kesehatan yang Anda izinkan.</p>
+    </div>
+    
+    <div class="feature-card">
+        <i class="fas fa-laptop-medical" style="font-size: 2.5rem; color: var(--primary-color); margin-bottom: 1rem;"></i>
+        <h3>Akses Mudah</h3>
+        <p>Akses riwayat kesehatan Anda kapan saja dan di mana saja dengan platform yang aman dan mudah digunakan.</p>
+    </div>
+</div>
+{% endblock %}
