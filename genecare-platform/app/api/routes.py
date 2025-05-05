@@ -212,27 +212,41 @@ def get_my_dna_data():
                     parsed_data = json.loads(item['data'])
                     # Extract metadata if available
                     metadata = parsed_data.get('metadata', {})
+                    date_added = metadata.get('upload_date')
+                    if not date_added and hasattr(item.get('created_at'), 'isoformat'):
+                        date_added = item['created_at'].isoformat()
+                    elif not date_added:
+                        date_added = str(item.get('created_at', 'Unknown date'))
+                        
                     formatted_data.append({
                         'id': item['id'],
                         'dataType': item['data_type'],
-                        'dateAdded': metadata.get('upload_date', item['created_at']),
+                        'dateAdded': date_added,
                         'filename': metadata.get('filename', 'DNA Data'),
                         'notes': metadata.get('notes', '')
                     })
                 except json.JSONDecodeError:
                     # If not JSON, just use the basic info
+                    date_added = str(item.get('created_at', 'Unknown date'))
+                    if hasattr(item.get('created_at'), 'isoformat'):
+                        date_added = item['created_at'].isoformat()
+                        
                     formatted_data.append({
                         'id': item['id'],
                         'dataType': item['data_type'],
-                        'dateAdded': item['created_at'],
+                        'dateAdded': date_added,
                         'filename': 'DNA Data'
                     })
             else:
                 # If already a dictionary
+                date_added = str(item.get('created_at', 'Unknown date'))
+                if hasattr(item.get('created_at'), 'isoformat'):
+                    date_added = item['created_at'].isoformat()
+                    
                 formatted_data.append({
                     'id': item['id'],
                     'dataType': item['data_type'],
-                    'dateAdded': item['created_at'],
+                    'dateAdded': date_added,
                     'filename': 'DNA Data'
                 })
         
@@ -354,10 +368,18 @@ def get_medical_records():
                     data = {"title": "Medical Record", "details": record['data']}
             else:
                 data = record['data']
+            
+            # Handle created_at properly
+            record_date = data.get('date')
+            if not record_date:
+                if hasattr(record.get('created_at'), 'isoformat'):
+                    record_date = record['created_at'].isoformat()
+                else:
+                    record_date = str(record.get('created_at', 'Unknown date'))
                 
             formatted_records.append({
                 "id": record['id'],
-                "date": data.get('date', record['created_at']),
+                "date": record_date,
                 "type": record['data_type'],
                 "provider": data.get('provider', 'N/A'),
                 "title": data.get('title', 'Medical Record')

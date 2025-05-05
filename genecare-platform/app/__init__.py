@@ -1,4 +1,4 @@
-from flask import Flask, render_template
+from flask import Flask, render_template, redirect, url_for
 from app.extensions import db, login_manager  # Import login_manager
 import os
 
@@ -40,6 +40,11 @@ def create_app():
     @app.route('/genecare-platform')
     def genecare_platform():
         return render_template('index.html')
+        
+    # Add redirect for recommendations
+    @app.route('/recommendations')
+    def recommendations_redirect():
+        return redirect(url_for('auth.recommendations'))
 
     # Initialize repository directly here
     initialize_repository()

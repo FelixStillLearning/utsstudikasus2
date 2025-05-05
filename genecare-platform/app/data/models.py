@@ -1,5 +1,6 @@
-from sqlalchemy import Column, Integer, String, Text
+from sqlalchemy import Column, Integer, String, Text, DateTime
 from app.extensions import db  # Import the shared db instance
+from datetime import datetime
 
 class HealthData(db.Model):
     __tablename__ = 'health_data'
@@ -8,6 +9,7 @@ class HealthData(db.Model):
     user_id = Column(Integer, nullable=False)
     data_type = Column(String(50), nullable=False)
     encrypted_data = Column(Text, nullable=False)
+    created_at = Column(DateTime, default=datetime.utcnow)
 
     def __init__(self, user_id, data_type, encrypted_data):
         self.user_id = user_id
