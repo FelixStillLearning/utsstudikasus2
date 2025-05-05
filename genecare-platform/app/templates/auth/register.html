@@ -10,36 +10,23 @@
     <div class="container">
         <h2>Create an Account</h2>
         <form method="POST" action="{{ url_for('auth.register') }}">
-            {{ form.hidden_tag() }}
             <div class="form-group">
                 <label for="username">Username</label>
-                {{ form.username(class="form-control") }}
-                {% for error in form.username.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
+                <input type="text" id="username" name="username" required>
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                {{ form.email(class="form-control") }}
-                {% for error in form.email.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
+                <input type="email" id="email" name="email" required>
             </div>
             <div class="form-group">
                 <label for="password">Password</label>
-                {{ form.password(class="form-control") }}
-                {% for error in form.password.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
+                <input type="password" id="password" name="password" required>
             </div>
             <div class="form-group">
                 <label for="confirm_password">Confirm Password</label>
-                {{ form.confirm_password(class="form-control") }}
-                {% for error in form.confirm_password.errors %}
-                    <span class="text-danger">{{ error }}</span>
-                {% endfor %}
+                <input type="password" id="confirm_password" name="confirm_password" required>
             </div>
-            <button type="submit" class="btn btn-primary">Register</button>
+            <button type="submit">Register</button>
         </form>
         <p>Already have an account? <a href="{{ url_for('auth.login') }}">Login here</a>.</p>
     </div>
