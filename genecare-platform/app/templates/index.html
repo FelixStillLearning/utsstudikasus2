@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>GeneCare - Home</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/main.css') }}">
+</head>
+<body>
+    <header>
+        <h1>Welcome to GeneCare</h1>
+        <nav>
+            <ul>
+                <li><a href="{{ url_for('auth.login') }}">Login</a></li>
+                <li><a href="{{ url_for('auth.register') }}">Register</a></li>
+            </ul>
+        </nav>
+    </header>
+    <main>
+        <section>
+            <h2>Your Health Data, Secured</h2>
+            <p>At GeneCare, we prioritize your health data protection using state-of-the-art encryption methods.</p>
+        </section>
+    </main>
+    <footer>
+        <p>&copy; 2023 GeneCare. All rights reserved.</p>
+    </footer>
+</body>
+</html>
