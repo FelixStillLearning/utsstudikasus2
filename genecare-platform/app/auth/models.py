@@ -1,5 +1,5 @@
 from flask_sqlalchemy import SQLAlchemy
-from app.crypto.aes import encrypt, decrypt
+from app.crypto.aes import AESCipher
 
 db = SQLAlchemy()
 
@@ -10,7 +10,20 @@ class User(db.Model):
     email = db.Column(db.String(120), unique=True, nullable=True)  # Added email field
 
     def set_password(self, password):
-        self.password = encrypt(password)
+        # Use the AESCipher class to encrypt the password
+        cipher = AESCipher(key_id='user_password_key')
+        encrypted_data = cipher.encrypt(password)
+        self.password = str(encrypted_data)  # Convert to string for storage
 
     def check_password(self, password):
-        return decrypt(self.password) == password
+        # Decrypt the stored password and compare
+        try:
+            import json
+            # Convert stored string back to dictionary
+            encrypted_data = json.loads(self.password.replace("'", '"'))
+            cipher = AESCipher(key_id='user_password_key')
+            decrypted = cipher.decrypt(encrypted_data)
+            return decrypted == password
+        except Exception as e:
+            print(f"Password check error: {e}")
+            return False

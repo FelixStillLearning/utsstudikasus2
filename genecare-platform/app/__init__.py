@@ -1,10 +1,14 @@
 from flask import Flask, render_template
+from app.extensions import db  # Import db at the module level
 
 def create_app():
     app = Flask(__name__)
     
     # Load configuration
     app.config.from_object('app.config.Config')
+    
+    # Initialize extensions
+    db.init_app(app)
 
     # Initialize blueprints
     from app.auth.routes import auth_bp
@@ -33,7 +37,6 @@ def create_app():
 def initialize_repository():
     from app.data.repositories import HealthDataRepository
     from app.api.routes import set_repository
-    from app.extensions import db  # Import db from a dedicated extensions module
 
     repository = HealthDataRepository(db.session)
     set_repository(repository)
